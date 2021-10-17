@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.bff.app }}-svc
+  labels:
+    app: {{ .Values.bff.app }}
+spec:
+  ports:
+  - port: {{ .Values.bff.port }}
+    targetPort: {{ .Values.bff.port }}
+    protocol: TCP
+  selector:
+    app: {{ .Values.bff.app }}

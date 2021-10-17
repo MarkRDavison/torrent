@@ -1,0 +1,72 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31321.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zeno.Torrent.API", "src\Zeno.Torrent.API\Zeno.Torrent.API.csproj", "{BDEC778F-07EE-40D3-9F1D-34F8A439720D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zeno.Torrent.API.Test", "test\Zeno.Torrent.API.Test\Zeno.Torrent.API.Test.csproj", "{5B7509F8-7B26-444F-8F60-6B9DC4725DAA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{F9E0E7F9-4939-4980-B7EF-4F23DDF6A513}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zeno.Torrent.API.Integration", "test\Zeno.Torrent.API.Integration\Zeno.Torrent.API.Integration.csproj", "{9705DAB8-5BFE-443B-AD19-8E7ECA1F5FE3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zeno.Torrent.API.Data", "src\Zeno.Torrent.API.Data\Zeno.Torrent.API.Data.csproj", "{55BB01A3-1213-49D6-9F93-C73BD0FF7573}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zeno.Torrent.API.Service", "src\Zeno.Torrent.API.Service\Zeno.Torrent.API.Service.csproj", "{26CAC83F-1CB3-4FBD-9DBE-93E26E2A5D4D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zeno.Torrent.API.Framework", "src\Zeno.Torrent.API.Framework\Zeno.Torrent.API.Framework.csproj", "{1365D1D6-5CDD-4F03-AE2C-FE8763ADA514}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4F3B3C1D-81B3-4830-94C8-CAE6853952F3}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zeno.Torrent.API.Core", "src\Zeno.Torrent.API.Core\Zeno.Torrent.API.Core.csproj", "{4D157E8D-7F1C-4B25-8908-A4D464752965}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BDEC778F-07EE-40D3-9F1D-34F8A439720D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDEC778F-07EE-40D3-9F1D-34F8A439720D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDEC778F-07EE-40D3-9F1D-34F8A439720D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDEC778F-07EE-40D3-9F1D-34F8A439720D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B7509F8-7B26-444F-8F60-6B9DC4725DAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B7509F8-7B26-444F-8F60-6B9DC4725DAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B7509F8-7B26-444F-8F60-6B9DC4725DAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B7509F8-7B26-444F-8F60-6B9DC4725DAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9705DAB8-5BFE-443B-AD19-8E7ECA1F5FE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9705DAB8-5BFE-443B-AD19-8E7ECA1F5FE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9705DAB8-5BFE-443B-AD19-8E7ECA1F5FE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9705DAB8-5BFE-443B-AD19-8E7ECA1F5FE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55BB01A3-1213-49D6-9F93-C73BD0FF7573}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55BB01A3-1213-49D6-9F93-C73BD0FF7573}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55BB01A3-1213-49D6-9F93-C73BD0FF7573}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55BB01A3-1213-49D6-9F93-C73BD0FF7573}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26CAC83F-1CB3-4FBD-9DBE-93E26E2A5D4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26CAC83F-1CB3-4FBD-9DBE-93E26E2A5D4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26CAC83F-1CB3-4FBD-9DBE-93E26E2A5D4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26CAC83F-1CB3-4FBD-9DBE-93E26E2A5D4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1365D1D6-5CDD-4F03-AE2C-FE8763ADA514}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1365D1D6-5CDD-4F03-AE2C-FE8763ADA514}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1365D1D6-5CDD-4F03-AE2C-FE8763ADA514}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1365D1D6-5CDD-4F03-AE2C-FE8763ADA514}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D157E8D-7F1C-4B25-8908-A4D464752965}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D157E8D-7F1C-4B25-8908-A4D464752965}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D157E8D-7F1C-4B25-8908-A4D464752965}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D157E8D-7F1C-4B25-8908-A4D464752965}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5B7509F8-7B26-444F-8F60-6B9DC4725DAA} = {F9E0E7F9-4939-4980-B7EF-4F23DDF6A513}
+		{9705DAB8-5BFE-443B-AD19-8E7ECA1F5FE3} = {F9E0E7F9-4939-4980-B7EF-4F23DDF6A513}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F2452655-A865-447E-BE4F-303EFFC06440}
+	EndGlobalSection
+EndGlobal

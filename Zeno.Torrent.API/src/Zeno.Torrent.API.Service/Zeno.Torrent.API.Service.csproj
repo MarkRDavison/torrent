@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoTorrent" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Zeno.Torrent.API.Framework\Zeno.Torrent.API.Framework.csproj" />
+    <ProjectReference Include="..\Zeno.Torrent.API.Data\Zeno.Torrent.API.Data.csproj" />
+  </ItemGroup>
+
+</Project>

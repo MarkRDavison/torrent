@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  web:
+    build:
+      context: Zeno.Torrent.Web/
+    ports:
+      - 33000:3001
+  bff:
+    build:
+      context: Zeno.Torrent.Bff/
+    ports:
+      - 33001:4000
+  api:
+    build:
+      context: Zeno.Torrent.API/
+    ports:
+      - 33002:10000

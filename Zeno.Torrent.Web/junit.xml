@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="1" failures="1" errors="0" time="0.925">
+  <testsuite name="undefined" errors="0" failures="1" skipped="0" timestamp="2021-09-07T00:21:22" time="0.427" tests="1">
+    <testcase classname=" placeholder" name=" placeholder" time="0.002">
+      <failure>TypeError: moduleName.split is not a function
+    at Resolver.resolveModuleFromDirIfExists (D:\Workspace\Git\zeno-torrent\Zeno.Torrent.Web\node_modules\jest-runtime\node_modules\jest-resolve\build\index.js:271:30)
+    at Resolver.resolveModule (D:\Workspace\Git\zeno-torrent\Zeno.Torrent.Web\node_modules\jest-runtime\node_modules\jest-resolve\build\index.js:298:12)
+    at Resolver._getVirtualMockPath (D:\Workspace\Git\zeno-torrent\Zeno.Torrent.Web\node_modules\jest-runtime\node_modules\jest-resolve\build\index.js:445:14)
+    at Resolver._getAbsolutePath (D:\Workspace\Git\zeno-torrent\Zeno.Torrent.Web\node_modules\jest-runtime\node_modules\jest-resolve\build\index.js:431:14)
+    at Resolver.getModuleID (D:\Workspace\Git\zeno-torrent\Zeno.Torrent.Web\node_modules\jest-runtime\node_modules\jest-resolve\build\index.js:404:31)
+    at Runtime._shouldMock (D:\Workspace\Git\zeno-torrent\Zeno.Torrent.Web\node_modules\jest-runtime\build\index.js:1521:37)
+    at Runtime.require [as requireModuleOrMock] (D:\Workspace\Git\zeno-torrent\Zeno.Torrent.Web\node_modules\jest-runtime\build\index.js:916:16)
+    at Object.&lt;anonymous&gt; (D:\Workspace\Git\zeno-torrent\Zeno.Torrent.Web\test\test.js:2:5)
+    at Object.asyncJestTest (D:\Workspace\Git\zeno-torrent\Zeno.Torrent.Web\node_modules\jest-jasmine2\build\jasmineAsyncInstall.js:106:37)
+    at D:\Workspace\Git\zeno-torrent\Zeno.Torrent.Web\node_modules\jest-jasmine2\build\queueRunner.js:45:12</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

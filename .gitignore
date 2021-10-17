@@ -1,0 +1,6 @@
+*.env*
+*.vs/
+*TestResults/
+*bin/
+*obj/
+values.yaml

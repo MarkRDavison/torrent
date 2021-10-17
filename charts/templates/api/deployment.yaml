@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.api.app}}-dep
+  labels:
+    app: {{ .Values.api.app }}
+spec:
+  replicas: {{ .Values.api.replicas }}
+  selector:
+    matchLabels:
+      app:  {{ .Values.api.app }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.api.app }}
+    spec:
+      volumes:
+      - name: {{ .Values.storage.nfscluster.name }}
+        nfs:
+          server: {{ .Values.storage.nfscluster.nfs.server }}
+          path: {{ .Values.storage.nfscluster.nfs.path }}
+      - name: {{ .Values.storage.nfsmedia.name }}
+        nfs:
+          server: {{ .Values.storage.nfsmedia.nfs.server }}
+          path: {{ .Values.storage.nfsmedia.nfs.path }}
+      containers:
+      - name: {{ .Values.api.name }}
+        image: {{ .Values.api.image }}
+        startupProbe:
+          httpGet:
+            path: /health/startup
+            port: {{ .Values.api.port }}
+          failureThreshold: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health/liveness
+            port: {{ .Values.api.port }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health/readiness
+            port: {{ .Values.api.port }}
+          successThreshold: 3
+        ports:
+        - containerPort: {{ .Values.api.port }}
+        volumeMounts:
+        - name: {{ .Values.storage.nfscluster.name }}
+          mountPath: {{ .Values.api.containerMountPaths.cluster }}
+        - name: {{ .Values.storage.nfsmedia.name }}
+          mountPath: {{ .Values.api.containerMountPaths.media }}
+        env:
+        {{- include "helpers.list-api-deployment-env-variables" . | indent 10 }}
