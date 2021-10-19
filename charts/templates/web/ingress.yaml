@@ -5,6 +5,10 @@ metadata:
   labels:
     app: {{ .Values.web.app }}
 spec:
+  tls:
+    - hosts:
+      - {{ .Values.web.ingress.host }}
+      secretName: {{ .Values.tls.secretName }}
   rules:
   - host: {{ .Values.web.ingress.host }}
     http:

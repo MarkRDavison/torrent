@@ -1,3 +1,8 @@
+tls: {
+  secretName: wildcard-markdavison-kiwi,
+  enabled: true
+}
+
 api: {
   app: zeno-torrent-api,
   replicas: 1,

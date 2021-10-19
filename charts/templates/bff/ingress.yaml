@@ -5,6 +5,10 @@ metadata:
   labels:
     app: {{ .Values.bff.app }}
 spec:
+  tls:
+    - hosts:
+      - {{ .Values.web.ingress.host }}
+      secretName: {{ .Values.tls.secretName }}
   rules:
   - host: {{ .Values.bff.ingress.host }}
     http:
