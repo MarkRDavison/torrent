@@ -103,9 +103,9 @@ publish web:
 
 publish bff:
   stage: package
-  image: jdrouet/docker-with-buildx:stable
-  services:
-    - docker:dind
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
   needs:
     - job: "build web"
       optional: true
@@ -128,9 +128,9 @@ publish bff:
 
 publish api:
   stage: package
-  image: jdrouet/docker-with-buildx:stable
-  services:
-    - docker:dind
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
   needs:
     - job: "build web"
       optional: true
@@ -163,6 +163,8 @@ deploy to production:
       optional: true
     - job: "publish api"
       optional: true
+    - job: "end to end tests"
+      optional: false
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:

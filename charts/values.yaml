@@ -7,7 +7,7 @@ api: {
     host: torrent-api.markdavison.kiwi
   },
   containerMountPaths: {
-    cluster: /mnt/TorrentWorkingDirectory,
+    cluster: /mnt/cluster/torrent-storage,
     media: /mnt/media
   },
   port: '10000',
@@ -18,8 +18,8 @@ api: {
       'ZENO_TORRENT_DAEMON__DATABASE_PASSWORD'
     ],
     nonsecret: {
-      ZENO_TORRENT_DAEMON__DATABASE_PORT: '5433',
-      ZENO_TORRENT_DAEMON__DATABASE_HOST: '192.168.1.153',
+      ZENO_TORRENT_DAEMON__DATABASE_PORT: '5432',
+      ZENO_TORRENT_DAEMON__DATABASE_HOST: 'postgres.markdavison.kiwi',
       ZENO_TORRENT_DAEMON__TORRENT_ENGINE_SAVE_PATH: /mnt/TorrentWorkingDirectory/Downloads,
       ZENO_TORRENT_DAEMON__TORRENT_ENGINE_TORRENT_PATH: /mnt/TorrentWorkingDirectory/TorrentFiles,
       ZENO_TORRENT_DAEMON__TORRENT_ENGINE_MOVIE_PATH: /mnt/media/Movies,
@@ -57,7 +57,7 @@ bff: {
       SESSION_NAME: 'zeno-torrent-session',
       WEB_ORIGIN: 'https://torrent-web.markdavison.kiwi',
       REDIS_PORT: '6379',
-      REDIS_HOST: '192.168.1.153',
+      REDIS_HOST: 'redis.markdavison.kiwi',
       NODE_ENV: 'prod',
       PORT: 4000,
       BFF_ROOT: 'https://torrent-bff.markdavison.kiwi',
@@ -99,15 +99,15 @@ storage: {
   nfscluster: {
     name: cluster-nfs,
     nfs: {
-      server: 192.168.1.150,
-      path: /mnt/cluster/nfs/torrent-storage
+      server: nfs.markdavison.kiwi,
+      path: /media/dell2tb/cluster/nfs/torrent-storage
     }
   },
   nfsmedia: {
     name: media-nfs,
     nfs: {
-      server: 192.168.1.150,
-      path: /mnt/md0/media
+      server: nfs.markdavison.kiwi,
+      path: /media/ironwolf6tb/media
     }
   }
 }
