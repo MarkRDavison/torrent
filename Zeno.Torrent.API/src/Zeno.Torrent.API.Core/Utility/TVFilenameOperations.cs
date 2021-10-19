@@ -79,11 +79,20 @@ namespace Zeno.Torrent.API.Core.Utility {
             return string.Empty;
         }
 
+        public static bool GetSample(string filename) {
+            var segments = filename.Split('/', ',', '.', '-');
+            return segments.Any(s => s.Equals("sample", StringComparison.OrdinalIgnoreCase));
+        }
+
         public static TVFilenameInfo ExtractInfo(string name) {
             int season;
             int episode;
             bool repack = name.Contains("REPACK", StringComparison.InvariantCultureIgnoreCase);
             string quality = GetQuality(name);
+
+            if (GetSample(name)) {
+                return new TVFilenameInfo { };
+            }
 
             if (MatchSxEyFormat(name, out season, out episode) ||
                 MatchSxEFormat(name, out season, out episode)) {

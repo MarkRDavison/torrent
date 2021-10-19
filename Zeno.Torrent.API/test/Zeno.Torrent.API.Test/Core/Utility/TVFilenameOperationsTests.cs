@@ -73,5 +73,16 @@ namespace Zeno.Torrent.API.Test.Core.Utility {
 
             Assert.AreEqual(expected, TVFilenameOperations.CreateFileName(show, info, extension));
         }
+
+        [TestMethod]
+        [DataRow("Loki.S01E01.720p.YIFY.sample.mkv")]
+        [DataRow("Loki.S05E07.1080p.YIFY.repack.sample.mkv")]
+        [DataRow("Loki.5x07.1080p.YIFY.REPACK.sample.mkv")]
+        [DataRow("Loki.5xsa07.1asd080p.YIFY.REPACK.sample.mkv")]
+        [DataRow("brooklyn.nine-nine.s08e02.720p.hdtv.x264-syncopy.sample.mkv")]
+        public void SampleFilenamesAreNotValid(string fullPath) {
+            var info = TVFilenameOperations.ExtractInfo(fullPath);
+            Assert.IsFalse(info.Valid);
+        }
     }
 }
