@@ -145,7 +145,15 @@ namespace Zeno.Torrent.API.Core.Services {
                 return Array.Empty<string>();
             }
 
-            return tm.Torrent.Files.Select(f => Path.Combine(tm.SavePath, tm.Torrent.Name, f.Path)).ToArray();
+            return tm.Torrent.Files.Select(f => {
+                var fullPath = Path.Combine(tm.SavePath, tm.Torrent.Name, f.Path);
+                var partialPath = Path.Combine(tm.SavePath, f.Path);
+
+                if (fileOperations.FileExists(fullPath)) {
+                    return fullPath;
+                }
+                return partialPath;
+            }).ToArray();
         }
 
         public async Task<DownloadStatus> GetDownloadStatus(Download download, CancellationToken cancellationToken) {
