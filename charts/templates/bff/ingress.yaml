@@ -4,6 +4,8 @@ metadata:
   name: {{ .Values.bff.app}}-ingress
   labels:
     app: {{ .Values.bff.app }}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
 spec:
   tls:
     - hosts:

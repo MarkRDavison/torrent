@@ -4,6 +4,8 @@ metadata:
   name: {{ .Values.api.app}}-ingress
   labels:
     app: {{ .Values.api.app }}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
 spec:
   tls:
     - hosts:
