@@ -1,0 +1,113 @@
+api: {
+  app: zeno-torrent-api,
+  replicas: 1,
+  name: zeno-torrent-api,
+  image: zeno15/zeno-torrent-api,
+  ingress: {
+    host: torrent-api.markdavison.kiwi
+  },
+  containerMountPaths: {
+    cluster: /mnt/TorrentWorkingDirectory,
+    media: /mnt/media
+  },
+  port: '10000',
+  env: {
+    secret: [
+      'ZENO_TORRENT_DAEMON__DATABASE_NAME',
+      'ZENO_TORRENT_DAEMON__DATABASE_USER',
+      'ZENO_TORRENT_DAEMON__DATABASE_PASSWORD'
+    ],
+    nonsecret: {
+      ZENO_TORRENT_DAEMON__DATABASE_PORT: '5433',
+      ZENO_TORRENT_DAEMON__DATABASE_HOST: '192.168.1.153',
+      ZENO_TORRENT_DAEMON__TORRENT_ENGINE_SAVE_PATH: /mnt/TorrentWorkingDirectory/Downloads,
+      ZENO_TORRENT_DAEMON__TORRENT_ENGINE_TORRENT_PATH: /mnt/TorrentWorkingDirectory/TorrentFiles,
+      ZENO_TORRENT_DAEMON__TORRENT_ENGINE_MOVIE_PATH: /mnt/media/Movies,
+      ZENO_TORRENT_DAEMON__TORRENT_ENGINE_TV_PATH: /mnt/media/TVShows,
+      ZENO_TORRENT_DAEMON__DATABASE_TYPE: postgres,
+      ZENO_TORRENT_DAEMON__URL: "http://0.0.0.0:10000",
+      ZENO_TORRENT_DAEMON__CRON_JOB_PARAM: "0,15,30,45 * * * *",
+      ZENO_TORRENT_DAEMON__AUTO_COMPLETE: 'true',
+      ZENO_TORRENT_DAEMON__NUM_DOWNLOADS: '5',
+      ZENO_TORRENT_DAEMON__BFF_ORIGIN: 'https://torrent-bff.markdavison.kiwi',
+      ZENO_TORRENT_DAEMON__AUTHORITY: 'https://auth.markdavison.kiwi/auth/realms/markdavison.kiwi'
+    }
+  }
+}
+
+bff: {
+  app: zeno-torrent-bff,
+  replicas: 1,
+  name: zeno-torrent-bff,
+  image: zeno15/zeno-torrent-bff,
+  ingress: {
+    host: torrent-bff.markdavison.kiwi
+  },
+  port: '4000',
+  env: {
+    secret: [
+      'CLIENT_SECRET',
+      'SESSION_SECRET',
+      'REDIS_PASSWORD'
+    ],
+    nonsecret: {
+      AUTH_ROOT: 'https://auth.markdavison.kiwi/auth',
+      REALM: 'markdavison.kiwi',
+      CLIENT_ID: 'zeno-torrent',
+      SESSION_NAME: 'zeno-torrent-session',
+      WEB_ORIGIN: 'https://torrent-web.markdavison.kiwi',
+      REDIS_PORT: '6379',
+      REDIS_HOST: '192.168.1.153',
+      NODE_ENV: 'prod',
+      PORT: 4000,
+      BFF_ROOT: 'https://torrent-bff.markdavison.kiwi',
+      API_ROOT: 'https://torrent-api.markdavison.kiwi',
+      API_ROUTE: '/api',
+      API_CLIENT_ID: 'zeno-torrent-api',
+      API_CLIENT_SECRET: 'secret',
+      API_AUTH_ROOT: 'https://auth.markdavison.kiwi/auth',
+      API_REALM: 'markdavison.kiwi'
+    }
+  }
+}
+
+web: {
+  app: zeno-torrent-web,
+  replicas: 1,
+  name: zeno-torrent-web,
+  image: zeno15/zeno-torrent-web,
+  ingress: {
+    host: torrent-web.markdavison.kiwi
+  },
+  port: '3001',
+  env: {
+    secret: [
+      
+    ],
+    nonsecret: {
+      WEB_PORT: '3001',
+      ZENO_TORRENT_DAEMON_DASHBOARD_RUNTIME_DATA_POLL_RATE: '5000',
+      ZENO_TORRENT_DAEMON_DASHBOARD_TORRENT_POLL_RATE: '6000',
+      ZENO_TORRENT_DAEMON_BFF_BASE_URI: 'https://torrent-bff.markdavison.kiwi',
+      ZENO_TORRENT_DAEMON_LOGIN_URI: 'https://torrent-bff.markdavison.kiwi/auth/login',
+      ZENO_TORRENT_DAEMON_LOGOUT_URI: 'https://torrent-bff.markdavison.kiwi/auth/logout'
+    }
+  }
+}
+
+storage: {
+  nfscluster: {
+    name: cluster-nfs,
+    nfs: {
+      server: 192.168.1.150,
+      path: /mnt/cluster/nfs/torrent-storage
+    }
+  },
+  nfsmedia: {
+    name: media-nfs,
+    nfs: {
+      server: 192.168.1.150,
+      path: /mnt/md0/media
+    }
+  }
+}
