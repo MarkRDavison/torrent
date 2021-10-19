@@ -69,7 +69,7 @@ bff: {
       API_ROOT: 'https://torrent-api.markdavison.kiwi',
       API_ROUTE: '/api',
       API_CLIENT_ID: 'zeno-torrent-api',
-      API_CLIENT_SECRET: 'secret',
+      API_CLIENT_SECRET: 'UNDEFINED',
       API_AUTH_ROOT: 'https://auth.markdavison.kiwi/auth',
       API_REALM: 'markdavison.kiwi'
     }
