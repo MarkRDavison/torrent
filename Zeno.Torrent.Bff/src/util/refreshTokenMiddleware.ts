@@ -55,6 +55,7 @@ const CreateRefreshToken = (openidConnectConfig: OpenidConfig) => async (req: ex
         }
     }
     catch (err) {
+        console.error('There was an error trying to update the auth state for the bff');
         console.error(err);
     }
 

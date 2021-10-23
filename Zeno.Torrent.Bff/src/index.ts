@@ -97,7 +97,7 @@ const init = async (): Promise<express.Application> => {
     }));
     app.use(CreateRefreshToken(openidConnectConfigBff));
     app.use(async (req, res, next) => {
-        {
+        try {
             if (!!authState.access_token) {
                 // We have an access token, check if it is still valid
                 if (await isTokenRefreshNeeded(openidConnectConfigApi, authState.access_token, 30, config.API_CLIENT_ID, config.API_CLIENT_SECRET)) {
@@ -122,6 +122,10 @@ const init = async (): Promise<express.Application> => {
                 authState.access_token = response.data.access_token;
                 authState.refresh_token = response.data.refresh_token;
             }
+        }
+        catch (e) {
+            console.error('There was an error trying to update the auth state for the api');
+            console.error(e);
         }
         next();
     });
