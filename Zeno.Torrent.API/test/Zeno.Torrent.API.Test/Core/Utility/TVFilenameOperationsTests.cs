@@ -81,6 +81,7 @@ namespace Zeno.Torrent.API.Test.Core.Utility {
         [DataRow("Loki.5x07.1080p.YIFY.REPACK.sample.mkv")]
         [DataRow("Loki.5xsa07.1asd080p.YIFY.REPACK.sample.mkv")]
         [DataRow("brooklyn.nine-nine.s08e02.720p.hdtv.x264-syncopy.sample.mkv")]
+        [DataRow("invasion.2021.s01e03.1080p.web.h264-peculate-sample.mkv")]
         public void SampleFilenamesAreNotValid(string fullPath) {
             var info = TVFilenameOperations.ExtractInfo(fullPath);
             Assert.IsFalse(info.Valid);

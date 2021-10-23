@@ -203,6 +203,9 @@ namespace Zeno.Torrent.API.Core.Services {
                     error += errorMessage;
                     continue;
                 }
+                else if (file.Contains("sample", StringComparison.OrdinalIgnoreCase)) {
+                    logger.LogWarning("We are copying a file that has sample in the name: {0}", file);
+                }
 
                 var destinationLocation = Path.Combine(settings.TORRENT_ENGINE_TV_PATH, show.Name, $"Season {info.Season}");
 
