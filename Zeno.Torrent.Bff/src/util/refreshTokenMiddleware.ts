@@ -40,6 +40,10 @@ const CreateRefreshToken = (openidConnectConfig: OpenidConfig) => async (req: ex
             const need_refresh = await isTokenRefreshNeeded(openidConnectConfig, access_token, 30, config.CLIENT_ID, config.CLIENT_SECRET);
             
             if (need_refresh) {
+                console.log('The token needs to be refreshed for the bff');
+                if (refreshToken === null || refreshToken === undefined) {
+                    console.log('But the refresh token is undefined');
+                }
                 try {
                     const tokens = await refreshToken(openidConnectConfig, { access_token, refresh_token }, 30, config.CLIENT_ID, config.CLIENT_SECRET);
 
@@ -57,6 +61,10 @@ const CreateRefreshToken = (openidConnectConfig: OpenidConfig) => async (req: ex
     catch (err) {
         console.error('There was an error trying to update the auth state for the bff');
         console.error(err);
+        req.session.access_token = null;
+        req.session.refresh_token = null;
+
+        req.session.save();
     }
 
     next();

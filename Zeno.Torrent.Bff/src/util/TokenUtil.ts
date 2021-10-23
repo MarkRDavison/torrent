@@ -53,6 +53,10 @@ const isTokenRefreshNeeded = async (openidConnectConfig: OpenidConfig, token: st
         !active ||
         now + margin > exp;
 
+    if (!active) {
+        console.error('isTokenRefreshNeeded, token is not active');
+    }
+
     return need_refresh;
 };
 
