@@ -26,6 +26,7 @@ spec:
       containers:
       - name: {{ .Values.api.name }}
         image: {{ .Values.api.image }}
+        imagePullPolicy: Always
         startupProbe:
           httpGet:
             path: /health/startup
