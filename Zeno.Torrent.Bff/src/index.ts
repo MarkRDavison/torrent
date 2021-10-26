@@ -148,6 +148,11 @@ const init = async (): Promise<express.Application> => {
                 console.log('www-authenticate: ', proxyRes.headers['www-authenticate']);
             }
             console.log(`END - BFF Proxied request: ${req.method} - ${req.path} - ${proxyRes.statusCode}`);
+
+            if (proxyRes.statusCode >= 400 && 499 <= proxyRes.statusCode) {                
+                authState.access_token = undefined;
+                authState.refresh_token = undefined;
+            }
         }
     }));
     app.use(express.json()); // This must be after the proxy
