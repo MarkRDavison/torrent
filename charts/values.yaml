@@ -25,8 +25,8 @@ api: {
     nonsecret: {
       ZENO_TORRENT_DAEMON__DATABASE_PORT: '5432',
       ZENO_TORRENT_DAEMON__DATABASE_HOST: 'postgres.markdavison.kiwi',
-      ZENO_TORRENT_DAEMON__TORRENT_ENGINE_SAVE_PATH: /mnt/TorrentWorkingDirectory/Downloads,
-      ZENO_TORRENT_DAEMON__TORRENT_ENGINE_TORRENT_PATH: /mnt/TorrentWorkingDirectory/TorrentFiles,
+      ZENO_TORRENT_DAEMON__TORRENT_ENGINE_SAVE_PATH: /mnt/cluster/torrent-storage/TorrentWorkingDirectory/Downloads,
+      ZENO_TORRENT_DAEMON__TORRENT_ENGINE_TORRENT_PATH: /mnt/cluster/torrent-storage/TorrentWorkingDirectory/TorrentFiles,
       ZENO_TORRENT_DAEMON__TORRENT_ENGINE_MOVIE_PATH: /mnt/media/Movies,
       ZENO_TORRENT_DAEMON__TORRENT_ENGINE_TV_PATH: /mnt/media/TVShows,
       ZENO_TORRENT_DAEMON__DATABASE_TYPE: postgres,
