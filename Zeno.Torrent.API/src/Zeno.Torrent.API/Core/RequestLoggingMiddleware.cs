@@ -36,8 +36,7 @@ namespace Zeno.Torrent.API.Core {
         }
 
         public async Task Invoke(HttpContext context) {
-            if (!context.Request.Path.ToString().Contains("health") &&
-                !context.Request.Path.ToString().Contains("state")) {
+            if (!context.Request.Path.ToString().Contains("health")) {
                 Console.WriteLine("========== REQ START ==========");
                 Console.WriteLine("REQUEST: {0} {1}", context.Request.Method, context.Request.Path);
                 await _next.Invoke(context);
