@@ -4,8 +4,10 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Zeno.Torrent.API.Core.Configuration;
 using Zeno.Torrent.API.Data;
 using Zeno.Torrent.API.Data.Models;
 using Zeno.Torrent.API.Service.Services.Interfaces;
@@ -15,8 +17,8 @@ namespace Zeno.Torrent.API.Service.Services {
 
     public class MatrixNotifier : IMatrixNotifier {
 
-        private HttpMessageHandler handler;
-
+        private IHttpClientFactory httpClientFactory;
+        private readonly ILogger logger;
         public string RoomId { get; }
         public string Username { get; }
         public string Password { get; }
@@ -25,12 +27,13 @@ namespace Zeno.Torrent.API.Service.Services {
         public const string MessageType_Text = "m.text";
         public const string LoginType_Password = "m.login.password";
 
-        public MatrixNotifier(HttpMessageHandler handler, string roomId, string username, string password, string matrixRoot) {
-            RoomId = roomId;
-            Username = username;
-            Password = password;
-            MatrixRoot = matrixRoot?.TrimEnd(new[] { '/' }); ;
-            this.handler = handler;
+        public MatrixNotifier(ILogger<MatrixNotifier> logger, IHttpClientFactory httpClientFactory, IOptions<AppSettings> options) {
+            this.logger = logger;
+            RoomId = options.Value.MATRIX_ROOM_ID;
+            Username = options.Value.MATRIX_BOT_USERNAME;
+            Password = options.Value.MATRIX_BOT_PASSWORD;
+            MatrixRoot = options.Value.MATRIX_ROOT?.TrimEnd(new[] { '/' }); ;
+            this.httpClientFactory = httpClientFactory;
         }
 
         public async Task<MatrixUser> LoginUser() {
@@ -46,7 +49,7 @@ namespace Zeno.Torrent.API.Service.Services {
                 Content = data == null ? null : new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json")
             };
 
-            using (var client = new HttpClient(handler)) {
+            using (var client = httpClientFactory.CreateClient()) {
                 var response = await client.SendAsync(message);
                 string res = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<MatrixUser>(res);
@@ -66,7 +69,7 @@ namespace Zeno.Torrent.API.Service.Services {
                 Content = data == null ? null : new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json")
             };
 
-            using (var client = new HttpClient(handler)) {
+            using (var client = httpClientFactory.CreateClient()) {
                 var response = await client.SendAsync(message);
                 return response.IsSuccessStatusCode;
             }
@@ -106,9 +109,14 @@ namespace Zeno.Torrent.API.Service.Services {
         public async Task NotifyCompletedMedia(CompletedMedia media, CancellationToken cancellationToken) {
             var message = await GenerateMessage(media);
             if (string.IsNullOrEmpty(message)) {
+                logger.LogInformation("No message generated for completed media with download id {0}", media.Download.Id);
                 return;
             }
             var user = await LoginUser();
+            if (user == null) {
+                logger.LogInformation("No message generated for completed media with download id {0}", media.Download.Id);
+                return;
+            }
             await SendText(user, message);
         }
     }

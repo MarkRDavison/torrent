@@ -38,7 +38,8 @@ api: {
       ZENO_TORRENT_DAEMON__NUM_DOWNLOADS: '5',
       ZENO_TORRENT_DAEMON__BFF_ORIGIN: 'https://torrent-bff.markdavison.kiwi',
       ZENO_TORRENT_DAEMON__AUTHORITY: 'https://auth.markdavison.kiwi/auth/realms/markdavison.kiwi',
-      ZENO_TORRENT_DAEMON__MATRIX_ROOM_ID: '!cHSVwaqUYhLJCbpdFC:matrix.markdavison.kiwi'
+      ZENO_TORRENT_DAEMON__MATRIX_ROOM_ID: '!cHSVwaqUYhLJCbpdFC:matrix.markdavison.kiwi',
+      ZENO_TORRENT_DAEMON__MATRIX_ROOT: 'https://matrix.markdavison.kiwi'
     }
   }
 }

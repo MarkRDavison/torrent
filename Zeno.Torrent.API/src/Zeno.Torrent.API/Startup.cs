@@ -73,6 +73,8 @@ namespace Zeno.Torrent.API {
 
             services.AddScoped<IClaimsTransformation, AddRolesClaimsTransformation>();
 
+            services.AddHttpClient();
+
             services.AddHostedService<TorrentEngineService>();
 
             services.ConfigureAuthServices(appSettings);

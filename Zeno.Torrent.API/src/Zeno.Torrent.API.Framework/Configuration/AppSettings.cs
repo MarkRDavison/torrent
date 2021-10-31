@@ -20,5 +20,9 @@
         public string AUTHORITY { get; set; }
         public int NUM_DOWNLOADS { get; set; }
         public string BFF_ORIGIN { get; set; }
+        public string MATRIX_BOT_USERNAME { get; set; }
+        public string MATRIX_BOT_PASSWORD { get; set; }
+        public string MATRIX_ROOM_ID { get; set; }
+        public string MATRIX_ROOT { get; set; }
     }
 }

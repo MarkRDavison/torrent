@@ -10,6 +10,9 @@ using Moq.Protected;
 using Newtonsoft.Json.Linq;
 using Zeno.Torrent.API.Data.Models;
 using Zeno.Torrent.API.Data;
+using Microsoft.Extensions.Logging;
+using Zeno.Torrent.API.Core.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Zeno.Torrent.API.Test.Service.Services {
 
@@ -22,10 +25,26 @@ namespace Zeno.Torrent.API.Test.Service.Services {
 
         private MatrixNotifier matrixNotifier;
         private Mock<HttpMessageHandler> messageHandlerMock;
+        private Mock<ILogger<MatrixNotifier>> loggerMock;
+        private Mock<IOptions<AppSettings>> optionsMock;
+        private Mock<IHttpClientFactory> httpClientFactoryMock;
+            
 
         [TestInitialize]
         public void TestInitialize() {
             messageHandlerMock = new Mock<HttpMessageHandler>();
+            loggerMock = new Mock<ILogger<MatrixNotifier>>();
+
+            optionsMock = new Mock<IOptions<AppSettings>>();
+            optionsMock.Setup(o => o.Value).Returns(() => new AppSettings {
+                MATRIX_ROOT = MatrixRoot,
+                MATRIX_ROOM_ID = "!asdhjasjhksadkjhdsa:matrix.example.com",
+                MATRIX_BOT_PASSWORD = Password,
+                MATRIX_BOT_USERNAME = Username
+            });
+
+            httpClientFactoryMock = new Mock<IHttpClientFactory>();
+            httpClientFactoryMock.Setup(hcf => hcf.CreateClient()).Returns(() => new HttpClient(messageHandlerMock.Object));
         }
 
         [TestMethod]
@@ -52,7 +71,7 @@ namespace Zeno.Torrent.API.Test.Service.Services {
                 })
                 .Verifiable();
 
-            matrixNotifier = new MatrixNotifier(messageHandlerMock.Object, "!asdhgasgdjh:matrix.example.com", Username, Password, MatrixRoot);
+            matrixNotifier = new MatrixNotifier(loggerMock.Object, httpClientFactoryMock.Object, optionsMock.Object);
 
             var user = await matrixNotifier.LoginUser();
 
@@ -92,7 +111,7 @@ namespace Zeno.Torrent.API.Test.Service.Services {
                 })
                 .Verifiable();
 
-            matrixNotifier = new MatrixNotifier(messageHandlerMock.Object, roomId, Username, Password, MatrixRoot);
+            matrixNotifier = new MatrixNotifier(loggerMock.Object, httpClientFactoryMock.Object, optionsMock.Object);
 
             var response = await matrixNotifier.SendText(user, message);
 
@@ -105,7 +124,7 @@ namespace Zeno.Torrent.API.Test.Service.Services {
 
         [TestMethod]
         public async Task GenerateMessage_ReturnsAsExpectedForMovie() {
-            matrixNotifier = new MatrixNotifier(messageHandlerMock.Object, "!szxfhjdsa:matrix.example.com", Username, Password, MatrixRoot);
+            matrixNotifier = new MatrixNotifier(loggerMock.Object, httpClientFactoryMock.Object, optionsMock.Object);
 
             var media = new CompletedMedia {
                 DownloadType = Constants.DownloadType.Movie,
@@ -122,7 +141,7 @@ namespace Zeno.Torrent.API.Test.Service.Services {
 
         [TestMethod]
         public async Task GenerateMessage_ReturnsAsExpectedForSeason() {
-            matrixNotifier = new MatrixNotifier(messageHandlerMock.Object, "!szxfhjdsa:matrix.example.com", Username, Password, MatrixRoot);
+            matrixNotifier = new MatrixNotifier(loggerMock.Object, httpClientFactoryMock.Object, optionsMock.Object);
 
             var media = new CompletedMedia {
                 DownloadType = Constants.DownloadType.Season,
@@ -148,7 +167,7 @@ namespace Zeno.Torrent.API.Test.Service.Services {
 
         [TestMethod]
         public async Task GenerateMessage_ReturnsAsExpectedForEpisode() {
-            matrixNotifier = new MatrixNotifier(messageHandlerMock.Object, "!szxfhjdsa:matrix.example.com", Username, Password, MatrixRoot);
+            matrixNotifier = new MatrixNotifier(loggerMock.Object, httpClientFactoryMock.Object, optionsMock.Object);
 
             var media = new CompletedMedia {
                 DownloadType = Constants.DownloadType.Episode,
