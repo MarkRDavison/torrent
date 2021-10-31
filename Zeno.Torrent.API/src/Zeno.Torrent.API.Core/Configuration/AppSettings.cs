@@ -16,10 +16,6 @@
         public string URL { get; set; }
         public string FEED_URL { get; set; }
         public string CRON_JOB_PARAM { get; set; }
-        public string SMTP_ADDRESS { get; set; }
-        public string SMTP_PORT { get; set; }
-        public string SMTP_USERNAME { get; set; }
-        public string SMTP_SECRET { get; set; }
         public bool AUTO_COMPLETE { get; set; }
         public string AUTHORITY { get; set; }
         public int NUM_DOWNLOADS { get; set; }

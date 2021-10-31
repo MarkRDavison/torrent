@@ -107,10 +107,6 @@ namespace Zeno.Torrent.API.Integration {
             });
 
             Assert.AreNotEqual(Guid.Empty, download.Id);
-
-            var status = await GetAsync<DownloadStatus>($"/api/download/{download.Id}/state");
-
-            Assert.IsNotNull(status);
         }
 
         [TestMethod]

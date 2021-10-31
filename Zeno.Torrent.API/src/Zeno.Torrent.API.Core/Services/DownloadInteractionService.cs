@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -24,15 +23,18 @@ namespace Zeno.Torrent.API.Core.Services {
         private readonly ILogger logger;
         private readonly IServiceScopeFactory serviceScopeFactory;
         private readonly IWrappedTorrent wrappedTorrent;
+        private readonly INotificationAggregator notificationAggregator;
 
         public DownloadInteractionService(
             ILogger<DownloadInteractionService> logger,
             IServiceScopeFactory serviceScopeFactory,
-            IWrappedTorrent wrappedTorrent
+            IWrappedTorrent wrappedTorrent,
+            INotificationAggregator notificationAggregator
         ) {
             this.logger = logger;
             this.serviceScopeFactory = serviceScopeFactory;
             this.wrappedTorrent = wrappedTorrent;
+            this.notificationAggregator = notificationAggregator;
         }
 
         public async Task<Download> AddMagnetDownload(Download download, User user, CancellationToken cancellationToken) {
@@ -131,7 +133,7 @@ namespace Zeno.Torrent.API.Core.Services {
                         download.DownloadType == Constants.DownloadType.Season) {
                         error = await HandleTvDownload(configuration.Value, showService, fileOperations, download, files, cancellationToken);
                     } else if (download.DownloadType == Constants.DownloadType.Movie) {
-                        error = HandleMovieDownload(configuration.Value, fileOperations, download, files, cancellationToken);
+                        error = await HandleMovieDownload(configuration.Value, fileOperations, download, files, cancellationToken);
                     }
 
                     if (string.IsNullOrEmpty(error)) {
@@ -154,8 +156,12 @@ namespace Zeno.Torrent.API.Core.Services {
             }
         }
 
-        internal string HandleMovieDownload(AppSettings settings, IFileOperations fileOperations, Download download, string[] files, CancellationToken cancellationToken) {
+        internal async Task<string> HandleMovieDownload(AppSettings settings, IFileOperations fileOperations, Download download, string[] files, CancellationToken cancellationToken) {
             string error = string.Empty;
+            var completedMedia = new CompletedMedia {
+                DownloadType = download.DownloadType,
+                Download = download
+            };
             foreach (var file in files) {
                 var extension = Path.GetExtension(file);
 
@@ -171,6 +177,8 @@ namespace Zeno.Torrent.API.Core.Services {
                 fileOperations.CopyFile(source, target);
             }
 
+            await notificationAggregator.Notify(completedMedia, cancellationToken);
+
             return error;
         }
 
@@ -178,10 +186,15 @@ namespace Zeno.Torrent.API.Core.Services {
             var show = await showService.GetEntityAsync(download.DestinationTypeId, cancellationToken);
             if (show == null) throw new ArgumentException($"Show id ${download.DestinationTypeId} does not exist");
 
-            return CopyTVFiles(settings, fileOperations, download, show, files, cancellationToken);
+            return await CopyTVFiles(settings, fileOperations, download, show, files, cancellationToken);
         }
 
-        internal string CopyTVFiles(AppSettings settings, IFileOperations fileOperations, Download download, Show show, string[] files, CancellationToken cancellationToken) {
+        internal async Task<string> CopyTVFiles(AppSettings settings, IFileOperations fileOperations, Download download, Show show, string[] files, CancellationToken cancellationToken) {
+            var completedMedia = new CompletedMedia {
+                DownloadType = download.DownloadType,
+                Download = download,
+                Show = show
+            };
             string error = string.Empty;
             foreach (var file in files) {
                 var filename = Path.GetFileNameWithoutExtension(file);
@@ -207,6 +220,8 @@ namespace Zeno.Torrent.API.Core.Services {
                     logger.LogWarning("We are copying a file that has sample in the name: {0}", file);
                 }
 
+                completedMedia.TvInfo.Add(info);
+
                 var destinationLocation = Path.Combine(settings.TORRENT_ENGINE_TV_PATH, show.Name, $"Season {info.Season}");
 
                 if (!fileOperations.DirectoryExists(destinationLocation)) {
@@ -222,6 +237,8 @@ namespace Zeno.Torrent.API.Core.Services {
 
                 fileOperations.CopyFile(source, target);
             }
+
+            await notificationAggregator.Notify(completedMedia, cancellationToken);
 
             return error;
         }
