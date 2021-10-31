@@ -21,8 +21,8 @@ api: {
       'ZENO_TORRENT_DAEMON__DATABASE_NAME',
       'ZENO_TORRENT_DAEMON__DATABASE_USER',
       'ZENO_TORRENT_DAEMON__DATABASE_PASSWORD',
-      'MATRIX_BOT_USERNAME',
-      'MATRIX_BOT_PASSWORD'
+      'ZENO_TORRENT_DAEMON__MATRIX_BOT_USERNAME',
+      'ZENO_TORRENT_DAEMON__MATRIX_BOT_PASSWORD'
     ],
     nonsecret: {
       ZENO_TORRENT_DAEMON__DATABASE_PORT: '5432',
@@ -33,12 +33,12 @@ api: {
       ZENO_TORRENT_DAEMON__TORRENT_ENGINE_TV_PATH: /mnt/media/TVShows,
       ZENO_TORRENT_DAEMON__DATABASE_TYPE: postgres,
       ZENO_TORRENT_DAEMON__URL: "http://0.0.0.0:10000",
-      ZENO_TORRENT_DAEMON__CRON_JOB_PARAM: "0,15,30,45 * * * *",
+      ZENO_TORRENT_DAEMON__CRON_JOB_PARAM: "0 * * * *",
       ZENO_TORRENT_DAEMON__AUTO_COMPLETE: 'true',
       ZENO_TORRENT_DAEMON__NUM_DOWNLOADS: '5',
       ZENO_TORRENT_DAEMON__BFF_ORIGIN: 'https://torrent-bff.markdavison.kiwi',
       ZENO_TORRENT_DAEMON__AUTHORITY: 'https://auth.markdavison.kiwi/auth/realms/markdavison.kiwi',
-      MATRIX_ROOM_ID: '!cHSVwaqUYhLJCbpdFC:matrix.markdavison.kiwi'
+      ZENO_TORRENT_DAEMON__MATRIX_ROOM_ID: '!cHSVwaqUYhLJCbpdFC:matrix.markdavison.kiwi'
     }
   }
 }
