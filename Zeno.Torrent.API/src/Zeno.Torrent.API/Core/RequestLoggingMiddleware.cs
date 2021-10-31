@@ -37,11 +37,17 @@ namespace Zeno.Torrent.API.Core {
 
         public async Task Invoke(HttpContext context) {
             if (!context.Request.Path.ToString().Contains("health")) {
-                Console.WriteLine("========== REQ START ==========");
-                Console.WriteLine("REQUEST: {0} {1}", context.Request.Method, context.Request.Path);
+                if (!(context.Request.Method == "GET" && context.Request.Path == "/api/download") &&
+                    !(context.Request.Method == "GET" && context.Request.Path == "/api/download/all/state")) {
+                    Console.WriteLine("========== REQ START ==========");
+                    Console.WriteLine("REQUEST: {0} {1}", context.Request.Method, context.Request.Path);
+                }
                 await _next.Invoke(context);
-                Console.WriteLine("RESPONSE: {0}", context.Response.StatusCode);
-                Console.WriteLine("========== REQ END ==========");
+                if (!(context.Request.Method == "GET" && context.Request.Path == "/api/download") &&
+                    !(context.Request.Method == "GET" && context.Request.Path == "/api/download/all/state")) {
+                    Console.WriteLine("RESPONSE: {0}", context.Response.StatusCode);
+                    Console.WriteLine("========== REQ END ==========");
+                }
             }
         }
 
