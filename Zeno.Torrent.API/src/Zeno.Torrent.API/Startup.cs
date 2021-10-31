@@ -56,6 +56,7 @@ namespace Zeno.Torrent.API {
             services.AddSingleton<IDownloadInteractionService, DownloadInteractionService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<INotificationAggregator, NotificationAggregator>();
+            services.AddSingleton<IMatrixNotifier, MatrixNotifier>();
 
             services.AddTransient<ITorrentRepository, TorrentRepository>();
 
