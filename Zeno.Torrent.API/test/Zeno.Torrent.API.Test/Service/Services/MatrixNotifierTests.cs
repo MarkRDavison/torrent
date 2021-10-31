@@ -93,13 +93,12 @@ namespace Zeno.Torrent.API.Test.Service.Services {
             };
 
             const string message = "The message we are sending";
-            const string roomId = "!sdlikjfisjdhfiuh:matrix.example.com";
 
             messageHandlerMock
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .Callback(async (HttpRequestMessage m, CancellationToken c) => {
-                    Assert.AreEqual($"{MatrixRoot}/_matrix/client/r0/rooms/{roomId}/send/m.room.message?access_token={user.access_token}", m.RequestUri.OriginalString);
+                    Assert.AreEqual($"{MatrixRoot}/_matrix/client/r0/rooms/{optionsMock.Object.Value.MATRIX_ROOM_ID}/send/m.room.message?access_token={user.access_token}", m.RequestUri.OriginalString);
 
                     var json = JObject.Parse(await m.Content.ReadAsStringAsync());
 
