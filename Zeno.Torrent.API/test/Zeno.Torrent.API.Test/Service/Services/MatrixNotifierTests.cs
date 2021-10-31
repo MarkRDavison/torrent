@@ -44,7 +44,7 @@ namespace Zeno.Torrent.API.Test.Service.Services {
             });
 
             httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            httpClientFactoryMock.Setup(hcf => hcf.CreateClient()).Returns(() => new HttpClient(messageHandlerMock.Object));
+            httpClientFactoryMock.Setup(hcf => hcf.CreateClient(It.IsAny<string>())).Returns(() => new HttpClient(messageHandlerMock.Object));
         }
 
         [TestMethod]

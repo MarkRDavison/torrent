@@ -73,7 +73,7 @@ namespace Zeno.Torrent.API {
 
             services.AddScoped<IClaimsTransformation, AddRolesClaimsTransformation>();
 
-            services.AddHttpClient();
+            services.AddHttpClient("MatrixNotifier");
 
             services.AddHostedService<TorrentEngineService>();
 

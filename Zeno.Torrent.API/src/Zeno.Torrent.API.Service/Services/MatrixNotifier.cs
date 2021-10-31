@@ -69,7 +69,7 @@ namespace Zeno.Torrent.API.Service.Services {
                 Content = data == null ? null : new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json")
             };
 
-            using (var client = httpClientFactory.CreateClient()) {
+            using (var client = httpClientFactory.CreateClient("MatrixNotifier")) {
                 var response = await client.SendAsync(message);
                 return response.IsSuccessStatusCode;
             }
