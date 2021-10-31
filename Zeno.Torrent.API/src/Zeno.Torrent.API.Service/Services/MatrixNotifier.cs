@@ -76,7 +76,14 @@ namespace Zeno.Torrent.API.Service.Services {
         }
 
         internal string GenerateMovieMessage(CompletedMedia completedMedia) {
-            return $"A new movie has been added to your Plex library!\n{completedMedia.Download.Name}";
+            var name = completedMedia.Download.Name;
+
+            var index = name.IndexOfAny(new[] { '[', '(' });
+            if (index >= 4) {
+                name = name.Substring(0, index).TrimEnd();
+            }
+
+            return $"A new movie has been added to your Plex library!\n{name}";
         }
         internal string GenerateEpisodeMessage(CompletedMedia completedMedia) {
             var info = completedMedia.TvInfo.FirstOrDefault();

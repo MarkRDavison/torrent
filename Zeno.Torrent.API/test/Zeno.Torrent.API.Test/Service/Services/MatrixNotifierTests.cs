@@ -136,6 +136,8 @@ namespace Zeno.Torrent.API.Test.Service.Services {
 
             Assert.IsTrue(message.Contains("Movie", System.StringComparison.OrdinalIgnoreCase));
             Assert.IsTrue(message.Contains("Dune", System.StringComparison.OrdinalIgnoreCase));
+            Assert.IsFalse(message.Contains("(1080p)", System.StringComparison.OrdinalIgnoreCase));
+            Assert.IsFalse(message.Contains("[2021]", System.StringComparison.OrdinalIgnoreCase));
         }
 
         [TestMethod]
