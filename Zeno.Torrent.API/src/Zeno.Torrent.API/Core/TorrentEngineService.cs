@@ -69,7 +69,8 @@ namespace Zeno.Torrent.API.Core {
                 applicationState.Ready = true;
             }
             catch (Exception e) {
-                logger.LogError("Failed to initialize torrent client engine", e);
+                logger.LogError("Failed to initialize torrent client engine: {0}", e.Message);
+                logger.LogError(e.StackTrace);
                 applicationState.Healthy = false;
             }
         }
