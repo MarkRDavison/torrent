@@ -125,7 +125,9 @@ namespace Zeno.Torrent.API.Core.Services {
             torrents.Remove(download.Hash);
             await tm.StopAsync();
             await clientEngine.RemoveAsync(tm, RemoveMode.CacheDataAndDownloadedData);
-            fileOperations.DeleteDirectory(Path.Combine(tm.SavePath, tm.Torrent.Name));
+            if (fileOperations.DirectoryExists(Path.Combine(tm.SavePath, tm.Torrent.Name))) {
+                fileOperations.DeleteDirectory(Path.Combine(tm.SavePath, tm.Torrent.Name));
+            }
             if (!string.IsNullOrEmpty(download.TorrentLocation)) {
                 fileOperations.DeleteFile(download.TorrentLocation);
             }
