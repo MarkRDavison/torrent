@@ -24,5 +24,7 @@
         public string MATRIX_BOT_PASSWORD { get; set; }
         public string MATRIX_ROOM_ID { get; set; }
         public string MATRIX_ROOT { get; set; }
+        public string PLEX_TOKEN { get; set; }
+        public string PLEX_URL { get; set; }
     }
 }
