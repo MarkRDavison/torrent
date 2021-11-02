@@ -50,6 +50,14 @@ namespace Zeno.Torrent.API.Core.Services {
                 using (var scope = serviceScopeFactory.CreateScope()) {
                     var options = scope.ServiceProvider.GetRequiredService<IOptions<AppSettings>>();
 
+                    if (!string.IsNullOrEmpty(options.Value.PLEX_TOKEN) &&
+                        !string.IsNullOrEmpty(options.Value.PLEX_URL)) {
+
+                        var plexNotifier = scope.ServiceProvider.GetRequiredService<IPlexNotifier>();
+
+                        notificationAggregator.RegisterNotificationSink(plexNotifier);
+                    }
+
                     if (!string.IsNullOrEmpty(options.Value.MATRIX_BOT_USERNAME) &&
                         !string.IsNullOrEmpty(options.Value.MATRIX_BOT_PASSWORD) &&
                         !string.IsNullOrEmpty(options.Value.MATRIX_ROOM_ID) &&

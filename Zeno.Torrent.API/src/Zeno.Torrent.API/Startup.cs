@@ -57,6 +57,8 @@ namespace Zeno.Torrent.API {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<INotificationAggregator, NotificationAggregator>();
             services.AddSingleton<IMatrixNotifier, MatrixNotifier>();
+            services.AddSingleton<IPlexNotifier, PlexNotifier>();
+            
 
             services.AddTransient<ITorrentRepository, TorrentRepository>();
 
@@ -75,6 +77,7 @@ namespace Zeno.Torrent.API {
             services.AddScoped<IClaimsTransformation, AddRolesClaimsTransformation>();
 
             services.AddHttpClient("MatrixNotifier");
+            services.AddHttpClient("PlexNotifier");
 
             services.AddHostedService<TorrentEngineService>();
 

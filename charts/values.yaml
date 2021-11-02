@@ -22,7 +22,8 @@ api: {
       'ZENO_TORRENT_DAEMON__DATABASE_USER',
       'ZENO_TORRENT_DAEMON__DATABASE_PASSWORD',
       'ZENO_TORRENT_DAEMON__MATRIX_BOT_USERNAME',
-      'ZENO_TORRENT_DAEMON__MATRIX_BOT_PASSWORD'
+      'ZENO_TORRENT_DAEMON__MATRIX_BOT_PASSWORD',
+      'ZENO_TORRENT_DAEMON__PLEX_TOKEN'
     ],
     nonsecret: {
       ZENO_TORRENT_DAEMON__DATABASE_PORT: '5432',
@@ -39,7 +40,8 @@ api: {
       ZENO_TORRENT_DAEMON__BFF_ORIGIN: 'https://torrent-bff.markdavison.kiwi',
       ZENO_TORRENT_DAEMON__AUTHORITY: 'https://auth.markdavison.kiwi/auth/realms/markdavison.kiwi',
       ZENO_TORRENT_DAEMON__MATRIX_ROOM_ID: '!cHSVwaqUYhLJCbpdFC:matrix.markdavison.kiwi',
-      ZENO_TORRENT_DAEMON__MATRIX_ROOT: 'https://matrix.markdavison.kiwi'
+      ZENO_TORRENT_DAEMON__MATRIX_ROOT: 'https://matrix.markdavison.kiwi',
+      ZENO_TORRENT_DAEMON__PLEX_URL: 'https://plex.markdavison.kiwi'
     }
   }
 }
