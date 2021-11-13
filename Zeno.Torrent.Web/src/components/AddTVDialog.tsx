@@ -65,7 +65,7 @@ const _AddTVDialog = (props: Props): JSX.Element => {
             for (let torrentOffset = 0; torrentOffset < torrentTokens.length; ++torrentOffset) {
                 let match = true;
                 for (let i = 0; i < showTokens.length; ++i) {
-                    if (showTokens[i] !== torrentTokens[i + torrentOffset]){
+                    if (showTokens[i].toUpperCase() !== torrentTokens[i + torrentOffset].toUpperCase()){
                         match = false;
                         break;
                     }
