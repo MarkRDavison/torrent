@@ -141,6 +141,30 @@ namespace Zeno.Torrent.API.Test.Service.Services {
         }
 
         [TestMethod]
+        public async Task GenerateMessage_ReturnsAsExpectedForMovieWithCompletedMediaMovieInfo() {
+            matrixNotifier = new MatrixNotifier(loggerMock.Object, httpClientFactoryMock.Object, optionsMock.Object);
+
+            var media = new CompletedMedia {
+                DownloadType = Constants.DownloadType.Movie,
+                Download = new Download {
+                    Name = "Dune [2021] (1080p)"
+                },
+                MovieInfo = new MovieFilenameInfo {
+                    Name = "Dune",
+                    Quality = Constants.Quality.HD_1080p,
+                    Year = 2021
+                }
+            };
+
+            var message = await matrixNotifier.GenerateMessage(media);
+
+            Assert.IsTrue(message.Contains("Movie", System.StringComparison.OrdinalIgnoreCase));
+            Assert.IsTrue(message.Contains("Dune", System.StringComparison.OrdinalIgnoreCase));
+            Assert.IsFalse(message.Contains("(1080p)", System.StringComparison.OrdinalIgnoreCase));
+            Assert.IsFalse(message.Contains("[2021]", System.StringComparison.OrdinalIgnoreCase));
+        }
+
+        [TestMethod]
         public async Task GenerateMessage_ReturnsAsExpectedForSeason() {
             matrixNotifier = new MatrixNotifier(loggerMock.Object, httpClientFactoryMock.Object, optionsMock.Object);
 

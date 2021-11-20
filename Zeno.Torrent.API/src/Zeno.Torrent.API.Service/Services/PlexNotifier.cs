@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -81,6 +80,10 @@ namespace Zeno.Torrent.API.Service.Services {
         }
 
         public async Task NotifyPlexScan(CompletedMedia media, PlexSection section, string path, CancellationToken cancellationToken) {
+            if (!string.IsNullOrEmpty(media.MovieInfo.Name)) {
+                path += "/" + media.MovieInfo.Name;
+            }
+
             using (var client = httpClientFactory.CreateClient("PlexNotifier")) {
                 var uri = $"{options.Value.PLEX_URL}/library/sections/{section.Key}/refresh?X-Plex-Token={options.Value.PLEX_TOKEN}&path={HttpUtility.UrlEncode(path)}";
 
@@ -89,7 +92,7 @@ namespace Zeno.Torrent.API.Service.Services {
                     RequestUri = new Uri(uri)
                 };
 
-                await client.SendAsync(message);
+                await client.SendAsync(message, cancellationToken);
             }
         }
 
