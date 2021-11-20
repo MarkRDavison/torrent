@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -35,6 +36,15 @@ namespace Zeno.Torrent.API.Core.Services {
             this.serviceScopeFactory = serviceScopeFactory;
             this.wrappedTorrent = wrappedTorrent;
             this.notificationAggregator = notificationAggregator;
+        }
+
+        internal static string NormalisePaths(string path) {
+            var valid = Path.DirectorySeparatorChar;
+            var invalid = Path.DirectorySeparatorChar == '/'
+                ? '\\'
+                : '/';
+
+            return path.Replace(invalid, valid);
         }
 
         public async Task<Download> AddMagnetDownload(Download download, User user, CancellationToken cancellationToken) {
@@ -169,7 +179,23 @@ namespace Zeno.Torrent.API.Core.Services {
                     continue;
                 }
 
-                string target = Path.Combine(settings.TORRENT_ENGINE_MOVIE_PATH, Path.GetFileName(file));
+                if(file.Contains("sample", StringComparison.OrdinalIgnoreCase)) {
+                    logger.LogWarning("We are copying a file that has sample in the name: {0}", file);
+                }
+
+                var paths = new List<string> {
+                    settings.TORRENT_ENGINE_MOVIE_PATH
+                };
+
+                var movieInfo = MovieFilenameOperations.ExtractInfo(file);
+                if (!string.IsNullOrEmpty(movieInfo.Name)) {
+                    paths.Add(movieInfo.Name);
+                    completedMedia.MovieInfo = movieInfo;
+                }
+
+                paths.Add(Path.GetFileName(file));
+
+                string target = NormalisePaths(Path.Combine(paths.ToArray()));
                 string source = file;
 
                 logger.LogInformation("Copying from '{0}' to '{1}'", source, target);
@@ -230,7 +256,7 @@ namespace Zeno.Torrent.API.Core.Services {
 
                 var destinationName = TVFilenameOperations.CreateFileName(show, info, extension);
 
-                string target = Path.Combine(destinationLocation, destinationName);
+                string target = NormalisePaths(Path.Combine(destinationLocation, destinationName));
                 string source = file;
 
                 logger.LogInformation("Copying from '{0}' to '{1}'", source, target);

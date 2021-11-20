@@ -77,7 +77,7 @@ namespace Zeno.Torrent.API.Test.Service.Services {
         }
 
         [TestMethod]
-        public async Task NotifyPlexScan_MakesRequestCorrectly() {
+        public async Task NotifyPlexScan_MakesRequestCorrectly_ForDownloadNameOnly() {
             var section = new PlexSection {
                 Key = 2,
                 Path = "/media/Plex/Movies"
@@ -93,6 +93,39 @@ namespace Zeno.Torrent.API.Test.Service.Services {
                 .Callback((HttpRequestMessage m, CancellationToken c) => {
                     Assert.AreEqual(
                         $"{optionsMock.Object.Value.PLEX_URL}/library/sections/{section.Key}/refresh?X-Plex-Token={optionsMock.Object.Value.PLEX_TOKEN}&path={HttpUtility.UrlEncode(section.Path)}",
+                        m.RequestUri.OriginalString);
+                })
+                .ReturnsAsync(new HttpResponseMessage {
+                    StatusCode = System.Net.HttpStatusCode.OK
+                });
+
+            plexNotifier = new PlexNotifier(loggerMock.Object, httpClientFactoryMock.Object, optionsMock.Object);
+
+            await plexNotifier.NotifyPlexScan(media, section, section.Path, CancellationToken.None);
+        }
+
+        [TestMethod]
+        public async Task NotifyPlexScan_MakesRequestCorrectly_WithMovieInfo() {
+            var section = new PlexSection {
+                Key = 2,
+                Path = "/media/Plex/Movies"
+            };
+
+            var media = new CompletedMedia {
+                DownloadType = Constants.DownloadType.Movie,
+                MovieInfo = new MovieFilenameInfo {
+                    Name = "Movie Name Which Becomes The Folder Name",
+                    Year = 2021,
+                    Quality = Constants.Quality.HD_1080p
+                }
+            };
+
+            messageHandlerMock
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .Callback((HttpRequestMessage m, CancellationToken c) => {
+                    Assert.AreEqual(
+                        $"{optionsMock.Object.Value.PLEX_URL}/library/sections/{section.Key}/refresh?X-Plex-Token={optionsMock.Object.Value.PLEX_TOKEN}&path={HttpUtility.UrlEncode(section.Path + "/" + media.MovieInfo.Name)}",
                         m.RequestUri.OriginalString);
                 })
                 .ReturnsAsync(new HttpResponseMessage {

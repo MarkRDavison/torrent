@@ -6,6 +6,7 @@ namespace Zeno.Torrent.API.Data.Models {
         public string DownloadType { get; set; }
         public Show Show { get; set; }
         public List<TVFilenameInfo> TvInfo { get; } = new List<TVFilenameInfo>();
+        public MovieFilenameInfo MovieInfo { get; set; }
     }
 
 }
