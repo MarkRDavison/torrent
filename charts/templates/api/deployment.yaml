@@ -13,6 +13,7 @@ spec:
     metadata:
       labels:
         app: {{ .Values.api.app }}
+        date: "{{ now | unixEpoch }}"
     spec:
       volumes:
       - name: {{ .Values.storage.nfscluster.name }}

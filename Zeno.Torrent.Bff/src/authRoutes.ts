@@ -92,7 +92,6 @@ const createAuthRoutes = (authRoutePrefix: string, openidConnectConfig: OpenidCo
         const headers =  {'Content-type': 'application/x-www-form-urlencoded'};
     
         try {
-            console.log('Trying to login');
             const response = await axios.post(openidConnectConfig.token_endpoint, 
                 `grant_type=${'authorization_code'}&` +
                 `code_verifier=${verifier}&` +
@@ -103,7 +102,6 @@ const createAuthRoutes = (authRoutePrefix: string, openidConnectConfig: OpenidCo
                 headers: headers
             });
             
-            console.log('Trying to get user info');
             const userResponse = await axios.get(openidConnectConfig.userinfo_endpoint, {
                 headers:  {
                     'Authorization': `bearer ${response.data.access_token}`
