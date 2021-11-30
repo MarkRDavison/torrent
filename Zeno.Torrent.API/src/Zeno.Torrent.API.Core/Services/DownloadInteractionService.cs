@@ -200,6 +200,11 @@ namespace Zeno.Torrent.API.Core.Services {
 
                 logger.LogInformation("Copying from '{0}' to '{1}'", source, target);
 
+                var directory = Path.GetDirectoryName(target);
+                if (!fileOperations.DirectoryExists(directory)) {
+                    fileOperations.CreateDirectory(directory);
+                }
+
                 fileOperations.CopyFile(source, target);
             }
 
@@ -232,8 +237,10 @@ namespace Zeno.Torrent.API.Core.Services {
                 }
 
                 var info = TVFilenameOperations.ExtractInfo(filename);
-
-                if (!info.Valid) {
+                if (file.Contains("sample", StringComparison.OrdinalIgnoreCase)) {
+                    logger.LogWarning("We are copying a file that has sample in the name: {0}", file);
+                }
+                else if (!info.Valid) {
                     string errorMessage = $"Processing torrent {download.Id} for {show.Name} - {filename + extension} failed.";
                     logger.LogError(errorMessage);
                     if (!string.IsNullOrEmpty(error)) {
@@ -241,9 +248,6 @@ namespace Zeno.Torrent.API.Core.Services {
                     }
                     error += errorMessage;
                     continue;
-                }
-                else if (file.Contains("sample", StringComparison.OrdinalIgnoreCase)) {
-                    logger.LogWarning("We are copying a file that has sample in the name: {0}", file);
                 }
 
                 completedMedia.TvInfo.Add(info);

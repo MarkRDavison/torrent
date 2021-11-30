@@ -96,11 +96,17 @@ namespace Zeno.Torrent.API.Core.Utility {
 
             var periodName = ExtractNameFromTokens(periodTokens, periodQualityIndex, periodYearIndex);
             if (!string.IsNullOrEmpty(periodName)) {
+                if (periodName.Contains('/')) {
+                    return periodName.Split('/').Last().Trim();
+                }
                 return periodName.Trim();
             }
 
             var bracketName = ExtractNameFromTokens(bracketTokens, bracketQualityIndex, bracketYearIndex);
             if (!string.IsNullOrEmpty(bracketName)) {
+                if (bracketName.Contains('/')) {
+                    return bracketName.Split('/').Last().Trim();
+                }
                 return bracketName.Trim();
             }
 
