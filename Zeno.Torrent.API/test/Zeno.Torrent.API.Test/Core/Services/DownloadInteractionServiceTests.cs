@@ -32,7 +32,7 @@ namespace Zeno.Torrent.API.Test.Core.Services {
         public void TestInitialize() {
             appSettings = new AppSettings {
                 TORRENT_ENGINE_MOVIE_PATH = "\\mnt\\media\\Movies",
-                MEDIA_EXTENSIONS = ".mkv"
+                MEDIA_EXTENSIONS = ".mkv,.mp4"
             };
             loggerMock = new Mock<ILogger<DownloadInteractionService>>();
             serviceScopeFactoryMock = new Mock<IServiceScopeFactory>();
@@ -116,6 +116,24 @@ namespace Zeno.Torrent.API.Test.Core.Services {
 
             Assert.IsTrue(string.IsNullOrEmpty(error));
             Assert.IsTrue(invoked);
+        }
+
+        [TestMethod]
+        public async Task HandleMovieDownload_WithFullPathsWorks() {
+            var download = new Download {
+                DownloadType = Constants.DownloadType.Movie
+            };
+
+            var error = await downloadInteractionService.HandleMovieDownload(
+                appSettings,
+                fileOperationsMock.Object,
+                download,
+                new[] { "/mnt/cluster/torrent-storage/TorrentWorkingDirectory/Downloads/The Last Duel (2021) [1080p] [WEBRip] [5.1] [YTS/MX]/The.Last.Duel.2021.1080p.WEBRip.x264.AAC5-1[YTS.MX].mp4" },
+                CancellationToken.None
+            );
+
+            Assert.IsTrue(string.IsNullOrEmpty(error));
+            fileOperationsMock.Verify(f => f.CopyFile(It.IsAny<string>(), DownloadInteractionService.NormalisePaths("\\mnt\\media\\Movies\\The Last Duel\\The.Last.Duel.2021.1080p.WEBRip.x264.AAC5-1[YTS.MX].mp4")), Times.Once);
         }
 
     }
