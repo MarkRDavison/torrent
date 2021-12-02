@@ -48,7 +48,16 @@ namespace Zeno.Torrent.API.Core.Services {
                             item.ShowId = int.Parse(content);
                             break;
                         case "tv:show_name":
-                            item.ShowName = content;
+                            item.ShowName = content
+                                .Replace(":", string.Empty)
+                                .Replace("\"", string.Empty)
+                                .Replace("'", string.Empty)
+                                .Replace(":", string.Empty)
+                                .Replace("/", string.Empty)
+                                .Replace("\\", string.Empty)
+                                .Replace("|", string.Empty)
+                                .Replace("?", string.Empty)
+                                .Replace("*", string.Empty);
                             break;
                         case "tv:episode_id":
                             item.EpisodeId = int.Parse(content);

@@ -72,12 +72,10 @@ namespace Zeno.Torrent.API.Core.CronJobs {
                             .FirstOrDefaultAsync(cancellationToken);
 
                         if (show == null) {
-                            logger.LogWarning("Show {0} does not exist", i.ShowName);
                             continue;
                         }
 
                         if (i.Quality != show.Quality) {
-                            logger.LogWarning("Show {0} does not exist for specified quality {1}", i.ShowName, i.Quality);
                             continue;
                         }
 
@@ -96,7 +94,6 @@ namespace Zeno.Torrent.API.Core.CronJobs {
                             .FirstOrDefaultAsync(cancellationToken);
 
                         if (episode != null) {
-                            logger.LogWarning("Show {0} already has an episode for {1}x{2}", i.ShowName, episode.SeasonNumber, episode.EpisodeNumber);
                             continue;
                         }
 
@@ -141,8 +138,6 @@ namespace Zeno.Torrent.API.Core.CronJobs {
                                 Sub = ServiceSub.ToString()
                             }, cancellationToken);
                             episode.DownloadId = savedDownload.Id;
-                        } else {
-                            logger.LogWarning("Show {0} already exists {1}x{2}", i.ShowName, episode.SeasonNumber, episode.EpisodeNumber);
                         }
 
                         await episodeService.SaveEntityAsync(episode, cancellationToken);
