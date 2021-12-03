@@ -45,7 +45,7 @@ namespace Zeno.Torrent.API.Test.Core.Utility {
         [DataRow("Loki.5x07.1080p.YIFY.REPACK", 5, 7, true, Constants.Quality.HD_1080p, true)]
         [DataRow("Loki.5xsa07.1asd080p.YIFY.REPACK", 5, 7, true, Constants.Quality.HD_1080p, false)]
         [DataRow("brooklyn.nine-nine.s08e02.720p.hdtv.x264-syncopy.mkv", 8, 2, false, Constants.Quality.HD_720p, true)]
-        [DataRow("Rick.and.Morty.S05E00.The.Great.Yokai.Battle.of.Akihabara.720p.WEBRip.x264-BAE.mkv", 5, 0, false, Constants.Quality.HD_720p, true)]
+        [DataRow("Rick.and.Morty.S05E20.The.Great.Yokai.Battle.of.Akihabara.720p.WEBRip.x264-BAE.mkv", 5, 20, false, Constants.Quality.HD_720p, true)]
         [DataRow("dexter.new.blood.s01e03.720p.web.h264-ggez-sample.mkv", 1, 3, false, Constants.Quality.HD_720p, false)]
         public void ExtractInfoWorks(string fullPath, int season, int episode, bool repack, string quality, bool valid) {
             var info = TVFilenameOperations.ExtractInfo(fullPath);
