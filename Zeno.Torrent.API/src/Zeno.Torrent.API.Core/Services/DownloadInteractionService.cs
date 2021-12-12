@@ -180,7 +180,8 @@ namespace Zeno.Torrent.API.Core.Services {
                 }
 
                 if(file.Contains("sample", StringComparison.OrdinalIgnoreCase)) {
-                    logger.LogWarning("We are copying a file that has sample in the name: {0}", file);
+                    logger.LogWarning("We are skipping a file that has sample in the name: {0}", file);
+                    continue;
                 }
 
                 var paths = new List<string> {
@@ -238,7 +239,8 @@ namespace Zeno.Torrent.API.Core.Services {
 
                 var info = TVFilenameOperations.ExtractInfo(filename);
                 if (file.Contains("sample", StringComparison.OrdinalIgnoreCase)) {
-                    logger.LogWarning("We are copying a file that has sample in the name: {0}", file);
+                    logger.LogWarning("We are skipping a file that has sample in the name: {0}", file);
+                    continue;
                 }
                 else if (!info.Valid) {
                     string errorMessage = $"Processing torrent {download.Id} for {show.Name} - {filename + extension} failed.";
