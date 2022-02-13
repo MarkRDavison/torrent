@@ -25,6 +25,7 @@ namespace Zeno.Torrent.API.Service.Services {
         public const string MOVIE = "movie";
         public const string TVSHOW = "show";
         public const string MUSIC = "artist";
+        public const string VOD = "vod";
     }
 
     public class PlexNotifier : IPlexNotifier {
@@ -64,6 +65,11 @@ namespace Zeno.Torrent.API.Service.Services {
                         var location = n.SelectSingleNode("Location");
                         var path = location.Attributes.GetNamedItem("path").Value;
 
+                        if (title.Contains(PlexSectionType.VOD, StringComparison.OrdinalIgnoreCase))
+                        {
+                            title = PlexSectionType.VOD;
+                        }
+
                         var section = new PlexSection {
                             Key = int.Parse(key),
                             Path = path,
@@ -72,6 +78,7 @@ namespace Zeno.Torrent.API.Service.Services {
                         };
 
                         results[type] = section;
+
                     }
                 }
 
