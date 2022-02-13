@@ -92,6 +92,7 @@ namespace Zeno.Torrent.API.Service.Services {
                     RequestUri = new Uri(uri)
                 };
 
+                logger.LogInformation("Attempting to scan at {0}/library/sections/{1}/refresh?X-Plex-Token=<<REDACTED>>=&path={2}", options.Value.PLEX_URL, section.Key, path);
                 using (var response = await client.SendAsync(message, cancellationToken))
                 {
                     if (!response.IsSuccessStatusCode)
