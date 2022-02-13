@@ -92,7 +92,17 @@ namespace Zeno.Torrent.API.Service.Services {
                     RequestUri = new Uri(uri)
                 };
 
-                await client.SendAsync(message, cancellationToken);
+                using (var response = await client.SendAsync(message, cancellationToken))
+                {
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        logger.LogError("Failed to notify plex to scan: {0}", await response.Content.ReadAsStringAsync());
+                    }
+                    else
+                    {
+                        logger.LogInformation("Notified plex to scan succesfully");
+                    }
+                }
             }
         }
 

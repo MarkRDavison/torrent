@@ -10,68 +10,74 @@ using Zeno.Torrent.API.Framework.Instrumentation;
 using Zeno.Torrent.API.Service.Services.Interfaces;
 using Zeno.Torrent.API.Util;
 
-namespace Zeno.Torrent.API.Controllers {
+namespace Zeno.Torrent.API.Controllers
+{
 
     [ApiController]
     [Route("api/[controller]")]
-    public class EpisodeController : Controller {
+    public class EpisodeController : Controller
+    {
 
         private readonly ILogger logger;
-        private readonly IServiceScopeFactory serviceScopeFactory;
+        private readonly IServiceProvider serviceProvider;
 
         public EpisodeController(
             ILogger<EpisodeController> logger,
-            IServiceScopeFactory serviceScopeFactory) {
+            IServiceProvider serviceProvider)
+        {
             this.logger = logger;
-            this.serviceScopeFactory = serviceScopeFactory;
+            this.serviceProvider = serviceProvider;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(CancellationToken cancellationToken) {
-            using (logger.ProfileOperation(context: "GET api/episode")) {
-                using (var scope = serviceScopeFactory.CreateScope()) {
-                    var episodeService = scope.ServiceProvider.GetRequiredService<IEntityService<Episode>>();
+        public async Task<IActionResult> Get(CancellationToken cancellationToken)
+        {
+            using (logger.ProfileOperation(context: "GET api/episode"))
+            {
+                var episodeService = serviceProvider.GetRequiredService<IEntityService<Episode>>();
 
-                    return Ok(await episodeService.GetEntitiesAsync(cancellationToken));
-                }
+                return Ok(await episodeService.GetEntitiesAsync(cancellationToken));
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Episode episode, CancellationToken cancellationToken) {
-            using (logger.ProfileOperation(context: "POST api/episode")) {
-                using (var scope = serviceScopeFactory.CreateScope()) {
-                    var episodeService = scope.ServiceProvider.GetRequiredService<IEntityService<Episode>>();
-                    var episodeDefaulter = scope.ServiceProvider.GetRequiredService<IEntityDefaulter<Episode>>();
+        public async Task<IActionResult> Post([FromBody] Episode episode, CancellationToken cancellationToken)
+        {
+            using (logger.ProfileOperation(context: "POST api/episode"))
+            {
+                var episodeService = serviceProvider.GetRequiredService<IEntityService<Episode>>();
+                var episodeDefaulter = serviceProvider.GetRequiredService<IEntityDefaulter<Episode>>();
 
-                    await episodeDefaulter.DefaultAsync(episode, UserUtils.Create(User));
+                await episodeDefaulter.DefaultAsync(episode, UserUtils.Create(User));
 
-                    try {
-                        var savedEpisode = await episodeService.SaveEntityAsync(episode, cancellationToken);
-                        if (savedEpisode == null) {
-                            return new BadRequestResult();
-                        }
-                        return Ok(savedEpisode);
+                try
+                {
+                    var savedEpisode = await episodeService.SaveEntityAsync(episode, cancellationToken);
+                    if (savedEpisode == null)
+                    {
+                        return new BadRequestResult();
                     }
-                    catch (AggregateException e) {
-                        return new BadRequestObjectResult(new {
-                            Error = e.Message,
-                            Validations = e.InnerExceptions.Select(e => e.Message).ToList()
-                        });
-                    }
-
+                    return Ok(savedEpisode);
+                }
+                catch (AggregateException e)
+                {
+                    return new BadRequestObjectResult(new
+                    {
+                        Error = e.Message,
+                        Validations = e.InnerExceptions.Select(e => e.Message).ToList()
+                    });
                 }
             }
         }
 
         [HttpPost("reset")]
-        public async Task<IActionResult> Reset(CancellationToken cancellationToken) {
-            using (logger.ProfileOperation(context: "POST api/episode/reset")) {
-                using (var scope = serviceScopeFactory.CreateScope()) {
-                    var episodeService = scope.ServiceProvider.GetRequiredService<IEntityService<Episode>>();
-                    await episodeService.DeleteAllEntitiesAsync(cancellationToken);
-                    return Ok();
-                }
+        public async Task<IActionResult> Reset(CancellationToken cancellationToken)
+        {
+            using (logger.ProfileOperation(context: "POST api/episode/reset"))
+            {
+                var episodeService = serviceProvider.GetRequiredService<IEntityService<Episode>>();
+                await episodeService.DeleteAllEntitiesAsync(cancellationToken);
+                return Ok();
             }
         }
 
