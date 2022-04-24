@@ -67,7 +67,8 @@ namespace Zeno.Torrent.API.Service.Services {
 
                         if (title.Contains(PlexSectionType.VOD, StringComparison.OrdinalIgnoreCase))
                         {
-                            title = PlexSectionType.VOD;
+                            // VODS are not automated
+                            continue;
                         }
 
                         var section = new PlexSection {

@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="LibraryInfo.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="JunitXml.TestLogger" Version="3.0.98" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
     <PackageReference Include="Moq" Version="4.16.1" />
@@ -17,6 +21,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Zeno.Torrent.API.Core\Zeno.Torrent.API.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="LibraryInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
