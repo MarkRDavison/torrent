@@ -116,24 +116,32 @@ namespace Zeno.Torrent.API.Service.Services {
         }
 
         public async Task NotifyCompletedMedia(CompletedMedia media, CancellationToken cancellationToken) {
-            var sections = await FetchSectionIds();
-            PlexSection section;
-            string path;
-            switch (media.DownloadType) {
-                case Constants.DownloadType.Movie:
-                    section = sections[PlexSectionType.MOVIE];
-                    path = section.Path;
-                    break;
-                case Constants.DownloadType.Season:
-                case Constants.DownloadType.Episode:
-                    section = sections[PlexSectionType.TVSHOW];
-                    path = section.Path + "/" + media.Show.Name;
-                    break;
-                default:
-                    return;
-            }
+            try
+            {
+                var sections = await FetchSectionIds();
+                PlexSection section;
+                string path;
+                switch (media.DownloadType)
+                {
+                    case Constants.DownloadType.Movie:
+                        section = sections[PlexSectionType.MOVIE];
+                        path = section.Path;
+                        break;
+                    case Constants.DownloadType.Season:
+                    case Constants.DownloadType.Episode:
+                        section = sections[PlexSectionType.TVSHOW];
+                        path = section.Path + "/" + media.Show.Name;
+                        break;
+                    default:
+                        return;
+                }
 
-            await NotifyPlexScan(media, section, path, cancellationToken);
+                await NotifyPlexScan(media, section, path, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("Failed to notify plex", ex);
+            }
         }
     }
 
