@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Zeno.Torrent.API.Core.Configuration;
 using Zeno.Torrent.API.Core.Services.Interfaces;
 using Zeno.Torrent.API.Core.Utility;
@@ -17,9 +17,11 @@ using Zeno.Torrent.API.Framework.Instrumentation;
 using Zeno.Torrent.API.Framework.Utility;
 using Zeno.Torrent.API.Service.Services.Interfaces;
 
-namespace Zeno.Torrent.API.Core.Services {
+namespace Zeno.Torrent.API.Core.Services
+{
 
-    public class DownloadInteractionService : IDownloadInteractionService {
+    public class DownloadInteractionService : IDownloadInteractionService
+    {
 
         private readonly ILogger logger;
         private readonly IServiceScopeFactory serviceScopeFactory;
@@ -31,14 +33,16 @@ namespace Zeno.Torrent.API.Core.Services {
             IServiceScopeFactory serviceScopeFactory,
             IWrappedTorrent wrappedTorrent,
             INotificationAggregator notificationAggregator
-        ) {
+        )
+        {
             this.logger = logger;
             this.serviceScopeFactory = serviceScopeFactory;
             this.wrappedTorrent = wrappedTorrent;
             this.notificationAggregator = notificationAggregator;
         }
 
-        internal static string NormalisePaths(string path) {
+        internal static string NormalisePaths(string path)
+        {
             var valid = Path.DirectorySeparatorChar;
             var invalid = Path.DirectorySeparatorChar == '/'
                 ? '\\'
@@ -47,9 +51,12 @@ namespace Zeno.Torrent.API.Core.Services {
             return path.Replace(invalid, valid);
         }
 
-        public async Task<Download> AddMagnetDownload(Download download, User user, CancellationToken cancellationToken) {
-            using (logger.ProfileOperation()) {
-                using (var scope = serviceScopeFactory.CreateScope()) {
+        public async Task<Download> AddMagnetDownload(Download download, User user, CancellationToken cancellationToken)
+        {
+            using (logger.ProfileOperation())
+            {
+                using (var scope = serviceScopeFactory.CreateScope())
+                {
                     var downloadService = scope.ServiceProvider.GetRequiredService<IEntityService<Download>>();
                     var downloadDefaulter = scope.ServiceProvider.GetRequiredService<IEntityDefaulter<Download>>();
 
@@ -57,23 +64,28 @@ namespace Zeno.Torrent.API.Core.Services {
 
                     var savedDownload = await downloadService.SaveEntityAsync(download, cancellationToken);
 
-                    if (savedDownload == null) {
+                    if (savedDownload == null)
+                    {
                         return null;
                     }
-                    
+
                     return await ResumeDownload(savedDownload, cancellationToken) ?? savedDownload;
                 }
             }
         }
 
-        public async Task<Download> ResumeDownload(Download download, CancellationToken cancellationToken) {
-            using (logger.ProfileOperation()) {
+        public async Task<Download> ResumeDownload(Download download, CancellationToken cancellationToken)
+        {
+            using (logger.ProfileOperation())
+            {
                 return await wrappedTorrent.RegisterDownload(download, cancellationToken);
             }
         }
 
-        public async Task ResumeDownloads(int downloads, CancellationToken cancellationToken) {
-            using (var scope = serviceScopeFactory.CreateScope()) {
+        public async Task ResumeDownloads(int downloads, CancellationToken cancellationToken)
+        {
+            using (var scope = serviceScopeFactory.CreateScope())
+            {
                 var downloadService = scope.ServiceProvider.GetRequiredService<IEntityService<Download>>();
                 var episodeService = scope.ServiceProvider.GetRequiredService<IEntityService<Episode>>();
                 var downloadIteractionService = scope.ServiceProvider.GetRequiredService<IDownloadInteractionService>();
@@ -86,19 +98,24 @@ namespace Zeno.Torrent.API.Core.Services {
                     .OrderBy(d => d.Id)
                     .Take(downloads)
                     .ToListAsync();
-                downloadsToResume.ForEach(async d => {
-                    try {
+                downloadsToResume.ForEach(async d =>
+                {
+                    try
+                    {
                         await downloadIteractionService.ResumeDownload(d, CancellationToken.None);
                     }
-                    catch (Exception e) {
+                    catch (Exception e)
+                    {
                         logger.LogError("Error resuming download", e);
                     }
                 });
             }
         }
 
-        internal async Task<Download> FetchAndUpdateStatus(DownloadStateChangedEventArgs e, string newState, CancellationToken cancellationToken) {
-            using (var scope = serviceScopeFactory.CreateScope()) {
+        internal async Task<Download> FetchAndUpdateStatus(DownloadStateChangedEventArgs e, string newState, CancellationToken cancellationToken)
+        {
+            using (var scope = serviceScopeFactory.CreateScope())
+            {
                 var downloadService = scope.ServiceProvider.GetRequiredService<IEntityService<Download>>();
 
                 var download = await downloadService.Entities
@@ -113,15 +130,20 @@ namespace Zeno.Torrent.API.Core.Services {
             }
         }
 
-        public async Task HandleDownloadAdded(DownloadStateChangedEventArgs e, CancellationToken cancellationToken) {
-            using (logger.ProfileOperation()) {
+        public async Task HandleDownloadAdded(DownloadStateChangedEventArgs e, CancellationToken cancellationToken)
+        {
+            using (logger.ProfileOperation())
+            {
                 await FetchAndUpdateStatus(e, Constants.DownloadState.Added, cancellationToken);
             }
         }
 
-        public async Task HandleDownloadComplete(DownloadStateChangedEventArgs e, CancellationToken cancellationToken) {
-            using (logger.ProfileOperation()) {
-                using (var scope = serviceScopeFactory.CreateScope()) {
+        public async Task HandleDownloadComplete(DownloadStateChangedEventArgs e, CancellationToken cancellationToken)
+        {
+            using (logger.ProfileOperation())
+            {
+                using (var scope = serviceScopeFactory.CreateScope())
+                {
                     var downloadService = scope.ServiceProvider.GetRequiredService<IEntityService<Download>>();
                     var showService = scope.ServiceProvider.GetRequiredService<IEntityService<Show>>();
                     var configuration = scope.ServiceProvider.GetRequiredService<IOptions<AppSettings>>();
@@ -131,7 +153,8 @@ namespace Zeno.Torrent.API.Core.Services {
                         .Where(d => d.Id == e.Id || d.Hash == e.Hash)
                         .FirstOrDefaultAsync(cancellationToken);
 
-                    if (download == null) {
+                    if (download == null)
+                    {
                         return;
                     }
 
@@ -140,24 +163,35 @@ namespace Zeno.Torrent.API.Core.Services {
                     string error = string.Empty;
 
                     if (download.DownloadType == Constants.DownloadType.Episode ||
-                        download.DownloadType == Constants.DownloadType.Season) {
+                        download.DownloadType == Constants.DownloadType.Season)
+                    {
                         error = await HandleTvDownload(configuration.Value, showService, fileOperations, download, files, cancellationToken);
-                    } else if (download.DownloadType == Constants.DownloadType.Movie) {
+                    }
+                    else if (download.DownloadType == Constants.DownloadType.Movie)
+                    {
                         error = await HandleMovieDownload(configuration.Value, fileOperations, download, files, cancellationToken);
                     }
 
-                    if (string.IsNullOrEmpty(error)) {
+                    if (string.IsNullOrEmpty(error))
+                    {
                         download.State = Constants.DownloadState.Processed;
-                    } else {
+                    }
+                    else
+                    {
                         download.State = Constants.DownloadState.Error;
                         logger.LogError(error);
                     }
 
                     download = await downloadService.SaveEntityAsync(download, cancellationToken);
 
-                    await wrappedTorrent.RemoveDownload(download, cancellationToken);
 
-                    if (string.IsNullOrEmpty(error) && configuration.Value.AUTO_COMPLETE) {
+                    if (string.IsNullOrEmpty(error))
+                    {
+                        await wrappedTorrent.RemoveDownload(download, cancellationToken);
+                    }
+
+                    if (string.IsNullOrEmpty(error) && configuration.Value.AUTO_COMPLETE)
+                    {
                         await downloadService.DeleteEntityAsync(download, cancellationToken);
                     }
 
@@ -166,20 +200,25 @@ namespace Zeno.Torrent.API.Core.Services {
             }
         }
 
-        internal async Task<string> HandleMovieDownload(AppSettings settings, IFileOperations fileOperations, Download download, string[] files, CancellationToken cancellationToken) {
+        internal async Task<string> HandleMovieDownload(AppSettings settings, IFileOperations fileOperations, Download download, string[] files, CancellationToken cancellationToken)
+        {
             string error = string.Empty;
-            var completedMedia = new CompletedMedia {
+            var completedMedia = new CompletedMedia
+            {
                 DownloadType = download.DownloadType,
                 Download = download
             };
-            foreach (var file in files) {
+            foreach (var file in files)
+            {
                 var extension = Path.GetExtension(file);
 
-                if (!settings.SplitMediaExtensions.Contains(extension)) {
+                if (!settings.SplitMediaExtensions.Contains(extension))
+                {
                     continue;
                 }
 
-                if(file.Contains("sample", StringComparison.OrdinalIgnoreCase)) {
+                if (file.Contains("sample", StringComparison.OrdinalIgnoreCase))
+                {
                     logger.LogWarning("We are skipping a file that has sample in the name: {0}", file);
                     continue;
                 }
@@ -189,7 +228,8 @@ namespace Zeno.Torrent.API.Core.Services {
                 };
 
                 var movieInfo = MovieFilenameOperations.ExtractInfo(file);
-                if (!string.IsNullOrEmpty(movieInfo.Name)) {
+                if (!string.IsNullOrEmpty(movieInfo.Name))
+                {
                     paths.Add(movieInfo.Name);
                     completedMedia.MovieInfo = movieInfo;
                 }
@@ -202,7 +242,8 @@ namespace Zeno.Torrent.API.Core.Services {
                 logger.LogInformation("Copying from '{0}' to '{1}'", source, target);
 
                 var directory = Path.GetDirectoryName(target);
-                if (!fileOperations.DirectoryExists(directory)) {
+                if (!fileOperations.DirectoryExists(directory))
+                {
                     fileOperations.CreateDirectory(directory);
                 }
 
@@ -214,38 +255,46 @@ namespace Zeno.Torrent.API.Core.Services {
             return error;
         }
 
-        internal async Task<string> HandleTvDownload(AppSettings settings, IEntityService<Show> showService, IFileOperations fileOperations, Download download, string[] files, CancellationToken cancellationToken) {
+        internal async Task<string> HandleTvDownload(AppSettings settings, IEntityService<Show> showService, IFileOperations fileOperations, Download download, string[] files, CancellationToken cancellationToken)
+        {
             var show = await showService.GetEntityAsync(download.DestinationTypeId, cancellationToken);
             if (show == null) throw new ArgumentException($"Show id ${download.DestinationTypeId} does not exist");
 
             return await CopyTVFiles(settings, fileOperations, download, show, files, cancellationToken);
         }
 
-        internal async Task<string> CopyTVFiles(AppSettings settings, IFileOperations fileOperations, Download download, Show show, string[] files, CancellationToken cancellationToken) {
-            var completedMedia = new CompletedMedia {
+        internal async Task<string> CopyTVFiles(AppSettings settings, IFileOperations fileOperations, Download download, Show show, string[] files, CancellationToken cancellationToken)
+        {
+            var completedMedia = new CompletedMedia
+            {
                 DownloadType = download.DownloadType,
                 Download = download,
                 Show = show
             };
             string error = string.Empty;
-            foreach (var file in files) {
+            foreach (var file in files)
+            {
                 var filename = Path.GetFileNameWithoutExtension(file);
                 var extension = Path.GetExtension(file);
                 var location = Path.GetDirectoryName(file);
 
-                if (!settings.SplitMediaExtensions.Contains(extension)) {
+                if (!settings.SplitMediaExtensions.Contains(extension))
+                {
                     continue;
                 }
 
                 var info = TVFilenameOperations.ExtractInfo(filename);
-                if (file.Contains("sample", StringComparison.OrdinalIgnoreCase)) {
+                if (file.Contains("sample", StringComparison.OrdinalIgnoreCase))
+                {
                     logger.LogWarning("We are skipping a file that has sample in the name: {0}", file);
                     continue;
                 }
-                else if (!info.Valid) {
+                else if (!info.Valid)
+                {
                     string errorMessage = $"Processing torrent {download.Id} for {show.Name} - {filename + extension} failed.";
                     logger.LogError(errorMessage);
-                    if (!string.IsNullOrEmpty(error)) {
+                    if (!string.IsNullOrEmpty(error))
+                    {
                         error += Environment.NewLine;
                     }
                     error += errorMessage;
@@ -256,7 +305,8 @@ namespace Zeno.Torrent.API.Core.Services {
 
                 var destinationLocation = Path.Combine(settings.TORRENT_ENGINE_TV_PATH, show.Name, $"Season {info.Season}");
 
-                if (!fileOperations.DirectoryExists(destinationLocation)) {
+                if (!fileOperations.DirectoryExists(destinationLocation))
+                {
                     fileOperations.CreateDirectory(destinationLocation);
                 }
 
@@ -275,21 +325,27 @@ namespace Zeno.Torrent.API.Core.Services {
             return error;
         }
 
-        public async Task HandleDownloadDownloading(DownloadStateChangedEventArgs e, CancellationToken cancellationToken) {
-            using (logger.ProfileOperation()) {
+        public async Task HandleDownloadDownloading(DownloadStateChangedEventArgs e, CancellationToken cancellationToken)
+        {
+            using (logger.ProfileOperation())
+            {
                 await FetchAndUpdateStatus(e, Constants.DownloadState.Downloading, cancellationToken);
             }
         }
 
-        public async Task HandleDownloadDeleted(DownloadStateChangedEventArgs e, CancellationToken cancellationToken) {
-            using (logger.ProfileOperation()) {
+        public async Task HandleDownloadDeleted(DownloadStateChangedEventArgs e, CancellationToken cancellationToken)
+        {
+            using (logger.ProfileOperation())
+            {
                 var download = await FetchAndUpdateStatus(e, Constants.DownloadState.Complete, cancellationToken);
                 await wrappedTorrent.RemoveDownload(download, cancellationToken);
             }
         }
 
-        public async Task HandleDownloadError(DownloadStateChangedEventArgs e, CancellationToken cancellationToken) {
-            using (logger.ProfileOperation()) {
+        public async Task HandleDownloadError(DownloadStateChangedEventArgs e, CancellationToken cancellationToken)
+        {
+            using (logger.ProfileOperation())
+            {
                 await FetchAndUpdateStatus(e, Constants.DownloadState.Error, cancellationToken);
             }
         }
