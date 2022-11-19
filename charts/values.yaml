@@ -111,7 +111,7 @@ storage: {
     name: cluster-nfs,
     nfs: {
       server: nfs.markdavison.kiwi,
-      path: /media/dell2tb/cluster/nfs/torrent-storage
+      path: /media/ironwolf6tb/cluster/nfs/torrent-storage
     }
   },
   nfsmedia: {
